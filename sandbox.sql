@@ -150,7 +150,10 @@ CREATE TABLE `investors` (
   `inaddress` varchar(100) DEFAULT NULL,
   `inphone` varchar(50) DEFAULT NULL,
   `inemail` varchar(50) DEFAULT NULL,
-  `indocument` varchar(200) DEFAULT NULL
+  `indocument` varchar(200) DEFAULT NULL,
+  `pin` varchar(200) DEFAULT NULL
+
+
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
@@ -223,7 +226,8 @@ CREATE TABLE `startpfounder` (
   `sfemail` varchar(50) DEFAULT NULL,
   `sfphone` varchar(50) DEFAULT NULL,
   `sfaddress` varchar(100) DEFAULT NULL,
-  `sfdocument` varchar(200) DEFAULT NULL
+  `sfdocument` varchar(200) DEFAULT NULL,
+  `pin` varchar(200) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
