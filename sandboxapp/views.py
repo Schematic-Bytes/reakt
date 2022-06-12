@@ -23,10 +23,8 @@ def login(request):
         i = c.fetchone()
         if(i[0] > 0):
             s = f"select * from login where uname='{email}'"
-            print(s)
             c.execute(s)
             i = c.fetchone()
-            print(i)
             if(i[3] == password):
                 request.session['email'] = email
                 if(i[5] == "Active"):
@@ -137,7 +135,6 @@ def adminInvestor(request):
     qry = "SELECT * FROM `investors` i, `login` l WHERE i.`inemail`=l.`uname` AND l.`status`='Rejected'"
     c.execute(qry)
     dataInactive = c.fetchall()
-    print(dataActive)
     return render(request, "adminInvestor.html", {"data": data, "dataActive": dataActive, "dataInactive": dataInactive})
 
 
@@ -226,19 +223,10 @@ def inViewIdea(request):
     qryViewCom = f"SELECT * FROM `comments`c, `startpfounder` s WHERE c.`ideaid`='{id}' AND c.`sfid`=s.`sfid` ORDER BY c.`comid` DESC"
     c.execute(qryViewCom)
     comments = c.fetchall()
-    qryInt = f"SELECT * FROM `investmentinterest` WHERE `invid`='{invid}' AND `ideaid`='{id}'"
-    c.execute(qryInt)
     interest = c.fetchone()
     return render(request, "inViewIdea.html", {"data": data, "comments": comments, "interest": interest})
 
 
-def inShowInterest(request):
-    id = request.session['id']
-    idea = request.GET['idea']
-    qry = f"INSERT INTO `investmentinterest` (`ideaid`,`invid`,`status`,`date`) VALUES ('{idea}','{id}','Interested',(SELECT SYSDATE()))"
-    c.execute(qry)
-    db.commit()
-    return redirect(f"/inViewIdea?post={idea}")
 
 
 def inViewSf(request):
@@ -326,7 +314,7 @@ def sfHome(request):
     qry = f"SELECT * FROM `startpfounder` WHERE `sfid`='{id}'"
     c.execute(qry)
     data = c.fetchone()
-    qryPost = f"SELECT * FROM `idea` i, `startpfounder` sf WHERE i.`sfid`=sf.`sfid` AND sf.`sfid`<>{id} ORDER BY i.`ideaid` DESC"
+    qryPost = f"SELECT * FROM `idea` i, `startpfounder` sf WHERE i.`sfid`=sf.`sfid` ORDER BY i.`ideaid` DESC"
     c.execute(qryPost)
     post = c.fetchall()
     if request.method == "POST":
@@ -342,10 +330,8 @@ def sftrending(request):
     c.execute(qry)
     data = c.fetchone()
     qry = f"select ideaid,count(ideaid) as vote from tbllike where postaction='like' group by ideaid order by vote desc limit 5"
-    print(qry)
     c.execute(qry)
     pst = c.fetchall()
-    print(pst)
     post=[]
 
     for i in pst:
@@ -444,14 +430,16 @@ def sfViewIdea(request):
     qry = f"SELECT * FROM `idea` i, `startpfounder` sf WHERE `ideaid`='{id}' AND i.`sfid`=sf.`sfid`"
     c.execute(qry)
     data = c.fetchone()
-    qry = f"SELECT count(*) FROM tbllike where sfid='{sfid}' and ideaid='{id}'"
+    print(sfid, id)
+    qry = f"SELECT count(*) FROM tbllike where ideaid='{id}'"
     c.execute(qry)
     d = c.fetchone()
     act=""
     like=0
     dislike=0
+    print(d)
     if d[0]>0:
-        qry = f"SELECT postaction FROM tbllike where sfid='{sfid}' and ideaid='{id}'"
+        qry = f"SELECT postaction FROM tbllike where ideaid='{id}'"
         c.execute(qry)
         d = c.fetchone()
         act=d[0]
@@ -491,6 +479,7 @@ def sfViewSf(request):
     qryPost = f"SELECT * FROM `idea` WHERE `sfid`={id}"
     c.execute(qryPost)
     post = c.fetchall()
+    print(post)
     return render(request, "sfViewSf.html", {"user": user, "post": post})
 
 
@@ -533,7 +522,9 @@ def sfAddFeedBack(request):
 
 
 def sfChat(request):
+    print(request.session.__repr__())
     sender = request.session["email"]
+    print(sender)
     qry = f"SELECT * FROM `investors` WHERE inemail in(select uname from login where status='Active') and pin in(select pin from startpfounder where sfemail='{sender}')"
     c.execute(qry)
     data = c.fetchall()
@@ -555,6 +546,7 @@ def sfChatPer(request):
 
 def sfViewMore(request):
     id = request.GET['id']
+
 
     sfid = request.session['id']
     qry = f"SELECT * FROM `idea` i, `startpfounder` sf WHERE `ideaid`='{id}' AND i.`sfid`=sf.`sfid`"

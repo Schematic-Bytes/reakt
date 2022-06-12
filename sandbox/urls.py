@@ -28,7 +28,6 @@ urlpatterns = [
     path("inViewIdea", views.inViewIdea),
     path("inViewSf", views.inViewSf),
     path("inChangeImage", views.inChangeImage),
-    path("inShowInterest", views.inShowInterest),
     path("inViewInvestmentOffers", views.inViewInvestmentOffers),
     path("inMakePayment", views.inMakePayment),
     path("inViewPayments", views.inViewPayments),
