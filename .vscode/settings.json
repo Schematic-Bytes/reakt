@@ -1,0 +1,17 @@
+{
+  "sqltools.connections": [
+    {
+      "mysqlOptions": {
+        "authProtocol": "default"
+      },
+      "previewLimit": 50,
+      "server": "localhost",
+      "port": 3309,
+      "driver": "MySQL",
+      "database": "sandbox",
+      "username": "root",
+      "password": "123456789",
+      "name": "sandbox"
+    }
+  ]
+}

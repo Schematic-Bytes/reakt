@@ -1,1 +1,6 @@
 py manage.py runserver
+INSERT INTO `idea` (`ideaid`, `sfid`, `idea`, `desc`, `date`) VALUES
+(1, 1, 'We are facing water issues in kaduthuruthi', 'Its been two day since we got water supply in kaduthuruthi. we dont even have enough water to do our daily routins.', '2022-03-24'),
+(2, 2, 'Waste dumbing near govt poly kaduthuruthi', 'We are currently facing waste dumbing near the GPTC kaduthuruti. it is becoming very hard to go to college.', '2022-03-24'),
+(6, 2, 'AB -ve Blood needed', 'One of the patients in govt medical college kottayam needs 2 bottle of AB-ve blood. AB-ve is concidered as one of the most rarest human blood group, kindly share this news and help us in saving patients life.','2022-03-29'),
+(7, 2, 'Roads are becoming ponds', 'The main roads which connects kaduthuruthi to thalayolaparamb are in critical condition. The holes in the roads have grown big and transportation has become nearly imposible. please share this news.', '2022-04-16');
