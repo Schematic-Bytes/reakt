@@ -430,14 +430,12 @@ def sfViewIdea(request):
     qry = f"SELECT * FROM `idea` i, `startpfounder` sf WHERE `ideaid`='{id}' AND i.`sfid`=sf.`sfid`"
     c.execute(qry)
     data = c.fetchone()
-    print(sfid, id)
     qry = f"SELECT count(*) FROM tbllike where ideaid='{id}'"
     c.execute(qry)
     d = c.fetchone()
     act=""
     like=0
     dislike=0
-    print(d)
     if d[0]>0:
         qry = f"SELECT postaction FROM tbllike where ideaid='{id}'"
         c.execute(qry)
@@ -479,7 +477,6 @@ def sfViewSf(request):
     qryPost = f"SELECT * FROM `idea` WHERE `sfid`={id}"
     c.execute(qryPost)
     post = c.fetchall()
-    print(post)
     return render(request, "sfViewSf.html", {"user": user, "post": post})
 
 
@@ -522,9 +519,7 @@ def sfAddFeedBack(request):
 
 
 def sfChat(request):
-    print(request.session.__repr__())
     sender = request.session["email"]
-    print(sender)
     qry = f"SELECT * FROM `investors` WHERE inemail in(select uname from login where status='Active') and pin in(select pin from startpfounder where sfemail='{sender}')"
     c.execute(qry)
     data = c.fetchall()
