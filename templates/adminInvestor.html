@@ -2,118 +2,118 @@
 <!--//header-w3l-->
 <!--/w3l-inner-page-breadcrumb-->
 <style>
-	table {
-		width: 100%;
-		margin-top: 20px;
-	}
-	th,
-	td {
-		padding: 10px;
-	}
-	table,
-	th,
-	td {
-		border: 1px solid gray;
-	}
+  table {
+    width: 100%;
+    margin-top: 20px;
+  }
+  th,
+  td {
+    padding: 10px;
+  }
+  table,
+  th,
+  td {
+    border: 1px solid gray;
+  }
 </style>
 <section class="w3l-inner-page-breadcrumb">
-	<div class="breadcrumb-bg py-5">
-		<div class="container pt-lg-5 pt-md-3 p-lg-4 pb-md-3 my-lg-3">
-			<h2 class="title pt-5">Investors</h2>
-		</div>
-	</div>
+  <div class="breadcrumb-bg py-5">
+    <div class="container pt-lg-5 pt-md-3 p-lg-4 pb-md-3 my-lg-3">
+      <h2 class="title pt-5">Investors</h2>
+    </div>
+  </div>
 </section>
 <!-- //w3l-inner-page-breadcrumb-->
 <!-- /contact-section -->
 <div class="w3l-contact-10" id="contact">
-	<div class="form-41-mian py-lg-5 py-md-4 py-2">
-		<div class="container">
-			<div class="header-title text-center mx-auto">
-				<h6 class="title-subhny mb-1"></h6>
-				<h3 class="title-w3l">Requested Police</h3>
-				<table>
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Phone</th>
-						<th>Address</th>
-						<th>Document</th>
-						<th colspan="2">Action</th>
-					</tr>
-					{% for d in data %}
-					<tr>
-						<td>{{d.0}}</td>
-						<td>{{d.1}}</td>
-						<td>{{d.4}}</td>
-						<td>{{d.3}}</td>
-						<td>{{d.2}}</td>
-						<td><a href="/static{{d.5}}" target="_blank">Document</a></td>
-						<td>
-							<a href="/approveInvestors?id={{d.6}}&status=Active">Approve</a>
-						</td>
-						<td>
-							<a href="/approveInvestors?id={{d.6}}&status=Rejected">Reject</a>
-						</td>
-					</tr>
-					{% endfor %}
-				</table>
-				<div class="mt-5"></div>
-				<h3 class="title-w3l">Active Police</h3>
-				<table>
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Phone</th>
-						<th>Address</th>
-						<th>Document</th>
-						<th>Action</th>
-					</tr>
-					{% for d in dataActive %}
-					<tr>
-						<td>{{d.0}}</td>
-						<td>{{d.1}}</td>
-						<td>{{d.4}}</td>
-						<td>{{d.3}}</td>
-						<td>{{d.2}}</td>
-						<td><a href="/static{{d.5}}" target="_blank">Document</a></td>
-						<td>
-							<a href="/approveInvestors?id={{d.6}}&status=Rejected">Block</a>
-						</td>
-					</tr>
-					{% endfor %}
-				</table>
-				<div class="mt-5"></div>
-				<h3 class="title-w3l">Inactive Police</h3>
-				<table>
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Email</th>
-						<th>Phone</th>
-						<th>Address</th>
-						<th>Document</th>
-						<th>Action</th>
-					</tr>
-					{% for d in dataInactive %}
-					<tr>
-						<td>{{d.0}}</td>
-						<td>{{d.1}}</td>
-						<td>{{d.4}}</td>
-						<td>{{d.3}}</td>
-						<td>{{d.2}}</td>
-						<td><a href="/static{{d.5}}" target="_blank">Document</a></td>
-						<td>
-							<a href="/approveInvestors?id={{d.6}}&status=Active">Activate</a>
-						</td>
-					</tr>
-					{% endfor %}
-				</table>
-			</div>
-		</div>
-		<!-- //contacts-5-grid -->
-	</div>
+  <div class="form-41-mian py-lg-5 py-md-4 py-2">
+    <div class="container">
+      <div class="header-title text-center mx-auto">
+        <h6 class="title-subhny mb-1"></h6>
+        <h3 class="title-w3l">Requested Police</h3>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Document</th>
+            <th colspan="2">Action</th>
+          </tr>
+          {% for d in data %}
+          <tr>
+            <td>{{d.0}}</td>
+            <td>{{d.1}}</td>
+            <td>{{d.4}}</td>
+            <td>{{d.3}}</td>
+            <td>{{d.2}}</td>
+            <td><a href="/static{{d.5}}" target="_blank">Document</a></td>
+            <td>
+              <a href="/approveInvestors?id={{d.7}}&status=Active">Approve</a>
+            </td>
+            <td>
+              <a href="/approveInvestors?id={{d.7}}&status=Rejected">Reject</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+        <div class="mt-5"></div>
+        <h3 class="title-w3l">Active Police</h3>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Document</th>
+            <th>Action</th>
+          </tr>
+          {% for d in dataActive %}
+          <tr>
+            <td>{{d.0}}</td>
+            <td>{{d.1}}</td>
+            <td>{{d.4}}</td>
+            <td>{{d.3}}</td>
+            <td>{{d.2}}</td>
+            <td><a href="/static{{d.5}}" target="_blank">Document</a></td>
+            <td>
+              <a href="/approveInvestors?id={{d.7}}&status=Rejected">Block</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+        <div class="mt-5"></div>
+        <h3 class="title-w3l">Inactive Police</h3>
+        <table>
+          <tr>
+            <th>ID</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Phone</th>
+            <th>Address</th>
+            <th>Document</th>
+            <th>Action</th>
+          </tr>
+          {% for d in dataInactive %}
+          <tr>
+            <td>{{d.0}}</td>
+            <td>{{d.1}}</td>
+            <td>{{d.4}}</td>
+            <td>{{d.3}}</td>
+            <td>{{d.2}}</td>
+            <td><a href="/static{{d.5}}" target="_blank">Document</a></td>
+            <td>
+              <a href="/approveInvestors?id={{d.7}}&status=Active">Activate</a>
+            </td>
+          </tr>
+          {% endfor %}
+        </table>
+      </div>
+    </div>
+    <!-- //contacts-5-grid -->
+  </div>
 </div>
 
 <!-- //contact-section -->

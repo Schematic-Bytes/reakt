@@ -5,8 +5,8 @@ from django.shortcuts import render, redirect
 import pymysql
 from django.core.files.storage import FileSystemStorage
 # Create your views here.
-db = pymysql.connect(host="localhost", user="root",
-                     password="123456789", database="sandbox")
+db = pymysql.connect(host="localhost", user="root", port=3309,
+                     password="", database="sandbox",)
 c = db.cursor()
 
 
@@ -26,6 +26,7 @@ def login(request):
             print(s)
             c.execute(s)
             i = c.fetchone()
+            print(i)
             if(i[3] == password):
                 request.session['email'] = email
                 if(i[5] == "Active"):
@@ -136,6 +137,7 @@ def adminInvestor(request):
     qry = "SELECT * FROM `investors` i, `login` l WHERE i.`inemail`=l.`uname` AND l.`status`='Rejected'"
     c.execute(qry)
     dataInactive = c.fetchall()
+    print(dataActive)
     return render(request, "adminInvestor.html", {"data": data, "dataActive": dataActive, "dataInactive": dataInactive})
 
 
