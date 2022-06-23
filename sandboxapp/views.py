@@ -437,10 +437,10 @@ def sfViewIdea(request):
     like=0
     dislike=0
     if d[0]>0:
-        qry = f"SELECT postaction FROM tbllike where ideaid='{id}'"
+        qry = f"SELECT postaction FROM tbllike where ideaid='{id}' and sfid='{sfid}'"
         c.execute(qry)
         d = c.fetchone()
-        act=d[0]
+        act=d[0] if d is not None else ""
         qry = f"SELECT count(*) FROM tbllike where ideaid='{id}' and postaction='like'"
         c.execute(qry)
         d = c.fetchone()
@@ -458,6 +458,7 @@ def sfViewIdea(request):
     qryViewCom = f"SELECT * FROM `comments`c, `startpfounder` s WHERE c.`ideaid`='{id}' AND c.`sfid`=s.`sfid` ORDER BY c.`comid` DESC"
     c.execute(qryViewCom)
     comments = c.fetchall()
+    print(f"{data} {comments} {act} {like} {dislike}")
     return render(request, "sfViewIdea.html", {"data": data, "comments": comments,"act":act,"like":like,"dislike":dislike})
 
 def sfilikepost(request):
