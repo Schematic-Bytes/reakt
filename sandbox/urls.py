@@ -55,4 +55,5 @@ urlpatterns = [
     path("sfilikepost", views.sfilikepost),
     path("sftrending", views.sftrending),
     path("sfViewMore", views.sfViewMore),
+    path("report", views.report),
 ]
