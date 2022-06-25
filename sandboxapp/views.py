@@ -7,8 +7,8 @@ from django.shortcuts import redirect, render
 db = pymysql.connect(
     host="localhost",
     user="root",
-    port=3306,
-    password="password",
+    port=3309,
+    password="",
     database="sandbox",
 )
 c = db.cursor()
