@@ -621,8 +621,8 @@ def report(request):
     query = (
         "select inname, inemail, inphone, inaddress from investors;"
         if user_type == "police"
-        else "select sfname, sfemail, sfphone, sfaddress from startpfounders;"
+        else "select sfname, sfemail, sfphone, sfaddress from startpfounder;"
     )
     c.execute(query)
     peoples = c.fetchall()
-    return render(request, "report.html", {"data": peoples, "title": "as"})
+    return render(request, "report.html", {"data": peoples, "title": user_type.title()})
