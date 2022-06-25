@@ -616,4 +616,13 @@ def sfViewMore(request):
 
 
 def report(request):
-    print(request)
+    user_type = request.GET["type"]
+    user_type = user_type if user_type is not None else "users"
+    query = (
+        "select inname, inemail, inphone, inaddress from investors;"
+        if user_type == "police"
+        else "select sfname, sfemail, sfphone, sfaddress from startpfounders;"
+    )
+    c.execute(query)
+    peoples = c.fetchall()
+    return render(request, "report.html", {"data": peoples, "title": "as"})
