@@ -16,8 +16,9 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from sandboxapp import views
+
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    path("admin/", admin.site.urls),
     path("", views.index),
     path("inReg", views.inReg),
     path("sfReg", views.sfReg),
@@ -56,4 +57,5 @@ urlpatterns = [
     path("sftrending", views.sftrending),
     path("sfViewMore", views.sfViewMore),
     path("report", views.report),
+    path("verification", views.otp),
 ]

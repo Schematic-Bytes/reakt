@@ -1,21 +1,87 @@
+import random
+import uuid
+
 import pymysql
 from django.core.files.storage import FileSystemStorage
-from django.http import HttpResponseRedirect
+from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 
 # Create your views here.
 db = pymysql.connect(
     host="localhost",
     user="root",
-    port=3309,
-    password="",
+    port=3306,
+    password="password",
     database="sandbox",
 )
 c = db.cursor()
 
+_login_cache_ = {}
+
 
 def index(request):
     return render(request, "index.html")
+
+
+def otp(request: HttpRequest):
+    uuid = request.GET.get("id")
+    user = _login_cache_.get(uuid)
+    if user is None:
+        response = render(request, "not_found.html")
+        response.status_code = 404
+        return response
+    if request.method == "GET":
+        return render(request, "verification.html", {"uuid": uuid, "validated": False})
+    else:
+        user_otp = request.POST.get("user-otp")
+        print(f"{user['otp']=}")
+        if user_otp == user["otp"]:
+            flag = 0
+            msg = ""
+
+            if user["user_type"] == "police":
+                qry = (
+                    "INSERT INTO `investors` (`inname`,`inaddress`,`inphone`,`inemail`,`indocument`,`pin`)"
+                    f" VALUES ('{user['name']}','{user['address']}','{user['phone']}',"
+                    f"'{user['email']}','{user['img']}','{user['pin']}')"
+                )
+                c.execute(qry)
+                db.commit()
+                qryLog = (
+                    "INSERT INTO `login`(`uid`,`uname`,`password`,`utype`,`status`) "
+                    f"VALUES ((SELECT MAX(`invid`) FROM `investors`),'{user['email']}',"
+                    f"'{user['password']}','investor','Inactive')"
+                )
+                c.execute(qryLog)
+                db.commit()
+            else:
+                qry = (
+                    f"INSERT INTO `startpfounder` (`sfname`,`sfaddress`,`sfphone`,`sfemail`,`sfdocument`,`pin`)"
+                    f" VALUES ('{user['name']}','{user['address']}','{user['phone']}','{user['email']}',"
+                    f"'{user['img']}','{user['pin']}')"
+                )
+                c.execute(qry)
+                db.commit()
+                qryLog = (
+                    f"INSERT INTO `login`(`uid`,`uname`,`password`,`utype`,`status`) "
+                    f"VALUES ((SELECT MAX(`sfid`) FROM `startpfounder`),'{user['email']}',"
+                    f"'{user['password']}','startup','Active')"
+                )
+                c.execute(qryLog)
+                db.commit()
+            msg = "Registration Successfull..."
+            flag = 1
+            return render(
+                request,
+                "inReg.html" if user["user_type"] == "police" else "sfReg.html",
+                {"msg": msg, "flag": flag},
+            )
+        else:
+            return render(
+                request,
+                "verification.html",
+                {"uuid": uuid, "validated": True},
+            )
 
 
 def login(request):
@@ -60,67 +126,72 @@ def login(request):
 
 
 def inReg(request):
-    flag = 0
-    msg = ""
+    msg, flag = "", 0
     if request.method == "POST":
-        name = request.POST["name"]
         email = request.POST["email"]
-        phone = request.POST["phone"]
-        address = request.POST["address"]
-        password = request.POST["password"]
-        pin = request.POST["pin"]
-        img = request.FILES["file"]
-        fs = FileSystemStorage()
-        filename = fs.save(img.name, img)
-        uploaded_file_url = fs.url(filename)
         check = f"SELECT COUNT(*) FROM `login` WHERE `uname`='{email}'"
         c.execute(check)
         check = c.fetchone()
         check = check[0]
         if check == 0:
-            qry = f"INSERT INTO `investors` (`inname`,`inaddress`,`inphone`,`inemail`,`indocument`,`pin`) VALUES ('{name}','{address}','{phone}','{email}','{uploaded_file_url}','{pin}')"
-            c.execute(qry)
-            db.commit()
-            qryLog = f"INSERT INTO `login`(`uid`,`uname`,`password`,`utype`,`status`) VALUES ((SELECT MAX(`invid`) FROM `investors`),'{email}','{password}','investor','Inactive')"
-            c.execute(qryLog)
-            db.commit()
-            msg = "Registration Successful..."
-            flag = 1
+            fs = FileSystemStorage()
+            image = request.FILES["file"]
+            filename = fs.save(image.name, image)
+            uploaded_file_url = fs.url(filename)
+            form_data = dict(
+                name=request.POST["name"],
+                email=email,
+                phone=request.POST["phone"],
+                address=request.POST["address"],
+                password=request.POST["password"],
+                pin=request.POST["pin"],
+                img=uploaded_file_url,
+                user_type="police",
+            )
+            rand_uuid = uuid.uuid4().__str__()
+            otp_generated = random.randrange(111111, 999999).__str__()
+            form_data["otp"] = otp_generated
+            _login_cache_[rand_uuid] = form_data
+            print(f"{otp_generated=}")
+            return redirect(f"/verification?id={rand_uuid}")
         else:
-            msg = "Email already exists..."
+            msg, flag = "Email already exists", 1
 
     return render(request, "inReg.html", {"msg": msg, "flag": flag})
 
 
 def sfReg(request):
-    flag = 0
-    msg = ""
+    msg, flag = "", 0
     if request.method == "POST":
-        name = request.POST["name"]
         email = request.POST["email"]
-        phone = request.POST["phone"]
-        address = request.POST["address"]
-        password = request.POST["password"]
-        pin = request.POST["pin"]
-        img = request.FILES["file"]
-        fs = FileSystemStorage()
-        filename = fs.save(img.name, img)
-        uploaded_file_url = fs.url(filename)
         check = f"SELECT COUNT(*) FROM `login` WHERE `uname`='{email}'"
         c.execute(check)
         check = c.fetchone()
         check = check[0]
+        print(check)
         if check == 0:
-            qry = f"INSERT INTO `startpfounder` (`sfname`,`sfaddress`,`sfphone`,`sfemail`,`sfdocument`,`pin`) VALUES ('{name}','{address}','{phone}','{email}','{uploaded_file_url}','{pin}')"
-            c.execute(qry)
-            db.commit()
-            qryLog = f"INSERT INTO `login`(`uid`,`uname`,`password`,`utype`,`status`) VALUES ((SELECT MAX(`sfid`) FROM `startpfounder`),'{email}','{password}','startup','Active')"
-            c.execute(qryLog)
-            db.commit()
-            msg = "Registration Successful..."
-            flag = 1
+            fs = FileSystemStorage()
+            image = request.FILES["file"]
+            filename = fs.save(image.name, image)
+            uploaded_file_url = fs.url(filename)
+            form_data = dict(
+                name=request.POST["name"],
+                email=request.POST["email"],
+                phone=request.POST["phone"],
+                address=request.POST["address"],
+                password=request.POST["password"],
+                pin=request.POST["pin"],
+                img=uploaded_file_url,
+                user_type="user",
+            )
+            rand_uuid = uuid.uuid4().__str__()
+            otp_generated = random.randrange(111111, 999999).__str__()
+            form_data["otp"] = otp_generated
+            _login_cache_[rand_uuid] = form_data
+            print(f"{otp_generated=}")
+            return redirect(f"/verification?id={rand_uuid}")
         else:
-            msg = "Email already exists..."
+            msg, flag = "Email already exists", 1
 
     return render(request, "sfReg.html", {"msg": msg, "flag": flag})
 
