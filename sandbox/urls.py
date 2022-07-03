@@ -58,4 +58,5 @@ urlpatterns = [
     path("sfViewMore", views.sfViewMore),
     path("report", views.report),
     path("verification", views.otp),
+    path("reset", views.resetmail),
 ]

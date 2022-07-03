@@ -6,6 +6,8 @@ from django.core.files.storage import FileSystemStorage
 from django.http import HttpRequest, HttpResponseRedirect
 from django.shortcuts import redirect, render
 
+from sandboxapp.auth_client import send_otp, send_reset_password
+
 # Create your views here.
 db = pymysql.connect(
     host="localhost",
@@ -71,6 +73,7 @@ def otp(request: HttpRequest):
                 db.commit()
             msg = "Registration Successfull..."
             flag = 1
+            _login_cache_.pop(uuid)
             return render(
                 request,
                 "inReg.html" if user["user_type"] == "police" else "sfReg.html",
@@ -153,7 +156,11 @@ def inReg(request):
             form_data["otp"] = otp_generated
             _login_cache_[rand_uuid] = form_data
             print(f"{otp_generated=}")
-            return redirect(f"/verification?id={rand_uuid}")
+            valid = send_otp(email, otp_generated)
+            if valid:
+                return redirect(f"/verification?id={rand_uuid}")
+            else:
+                msg, flag = "Could not send verification", 1
         else:
             msg, flag = "Email already exists", 1
 
@@ -188,12 +195,49 @@ def sfReg(request):
             otp_generated = random.randrange(111111, 999999).__str__()
             form_data["otp"] = otp_generated
             _login_cache_[rand_uuid] = form_data
-            print(f"{otp_generated=}")
-            return redirect(f"/verification?id={rand_uuid}")
+            valid = send_otp(email, otp_generated)
+            if valid:
+                return redirect(f"/verification?id={rand_uuid}")
+            else:
+                msg, flag = "Could not send verification", 1
         else:
             msg, flag = "Email already exists", 1
 
     return render(request, "sfReg.html", {"msg": msg, "flag": flag})
+
+
+def resetmail(request: HttpRequest):
+    if request.method == "POST":
+        usermail = request.POST.get("email")
+        if usermail is not None:
+            check = f"SELECT COUNT(*) FROM `login` WHERE `uname`='{usermail}'"
+            c.execute(check)
+            check = c.fetchone()
+            print(usermail, check)
+            if check[0] == 0:
+                return render(
+                    request,
+                    "sfReg.html",
+                    {"msg": "Email address does not exist in our system", "flag": 1},
+                )
+            c.execute(f"SELECT password FROM `login` WHERE `uname`='{usermail}';")
+            userpassword = c.fetchone()
+            validate = send_reset_password(usermail, userpassword[0])
+            if validate:
+                return render(
+                    request,
+                    "sfReg.html",
+                    {"msg": "Mail with your password has been send", "flag": 1},
+                )
+            else:
+                return render(
+                    request,
+                    "sfReg.html",
+                    {"msg": "Could not send password reset mail", "flag": 1},
+                )
+
+    else:
+        return render(request, "not_found.html")
 
 
 def adminHome(request):

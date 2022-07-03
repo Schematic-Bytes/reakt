@@ -1,6 +1,11 @@
 {% extends "basePage.html" %} {% block content %}
 <!--//header-w3l-->
 <!--/w3l-inner-page-breadcrumb-->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" />
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/js/bootstrap.bundle.min.js"
+	integrity="sha384-pprn3073KE6tl6bjs2QrFaJGz5/SUsLqktiwsUTF55Jfv3qYSDhgCecCxMW52nD2"
+	crossorigin="anonymous"></script>
+
 <section class="w3l-inner-page-breadcrumb">
 	<div class="breadcrumb-bg py-5">
 		<div class="container pt-lg-5 pt-md-3 p-lg-4 pb-md-3 my-lg-3">
@@ -19,38 +24,57 @@
 			</div>
 			<div class="contacts-5-grid-main mt-4">
 				<div class="form-inner-cont">
-					<form
-						action="#"
-						method="post"
-						class="signin-form"
-						enctype="multipart/form-data"
-					>
+					<form action="#" method="post" class="signin-form" enctype="multipart/form-data">
 						{% csrf_token %}
 						<div class="form-grids">
 							<div class="form-input" data-aos="fade-down">
-								<input
-									type="text"
-									name="name"
-									placeholder="UserName *"
-									required=""
-								/>
+								<input type="text" name="name" placeholder="UserName *" required="" />
 							</div>
 							<div class="form-input" data-aos="fade-down">
-								<input
-									type="password"
-									name="password"
-									placeholder="Password *"
-									required
-								/>
+								<input type="password" name="password" placeholder="Password *" required />
 							</div>
 						</div>
 						<div class="text-center mt-3">
 							<button class="btn btn-style btn-primary">LogIn</button>
 						</div>
 					</form>
+					<div class="text-center mt-3">
+						<button type="button" class="btn btn-outline-secondary" data-bs-toggle="modal"
+							data-bs-target="#resetDialog" data-bs-whatever="@mdo">Reset password
+						</button>
+					</div>
+					<div class="modal fade" id="resetDialog" tabindex="-1" aria-labelledby="resetDialogLabel"
+						aria-hidden="true">
+						<div class="modal-dialog">
+							<div class="modal-content">
+								<div class="modal-header">
+									<h5 class="modal-title" id="resetDialogLabel">Reset password</h5>
+									<button type="button" class="btn-close" data-bs-dismiss="modal"
+										aria-label="Close"></button>
+								</div>
+								<form method="post" action="/reset">
+									{% csrf_token %}
+									<div class="modal-body">
+										<div class="mb-3">
+											<label for="recipient-name" class="col-form-label">Enter your email
+												address:</label>
+											<input type="text" class="form-control border-dark" id="recipient-name"
+												placeholder="example@gmail.com" name="email" required>
+										</div>
+									</div>
+									<div class=" modal-footer">
+										<button type="button" class="btn btn-secondary"
+											data-bs-dismiss="modal">Close</button>
+										<button type="submit" class="btn btn-primary">Send password</button>
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>
+
 		<!-- //contacts-5-grid -->
 	</div>
 </div>
